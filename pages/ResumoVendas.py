@@ -48,10 +48,10 @@ def dashboard():
         # Cards
         col_Card1, col_Card2, col_Card3 = st.columns(3)
         with st.container():
-            valorPedido = 'R$ ' + locale.format_string('%.2f', filtered['vlr_TotalPago'].sum(), grouping=True)
-            valorPedidoDia = 'R$ ' + locale.format_string('%.2f', filtered[
+            valorPedido = 'R$ ' + format('%.2f', filtered['vlr_TotalPago'].sum(), grouping=True)
+            valorPedidoDia = 'R$ ' + format('%.2f', filtered[
                 filtered['dat_Criacao'] == filtered['dat_Criacao'].max()]['vlr_TotalPago'].sum(), grouping=True)
-            valorTicketMedio = 'R$ ' + locale.format_string('%.2f', filtered[
+            valorTicketMedio = 'R$ ' + format('%.2f', filtered[
                 filtered['dat_Criacao'] > filtered['dat_Criacao'].max() - pd.Timedelta(days=30)][
                 'vlr_TotalPago'].mean(), grouping=True)
 
@@ -416,10 +416,10 @@ def dashboard():
         with st.container():
             c1, c2, c3, c4, c5, c6 = st.columns(6)
             with c1:
-                cardValorComissao = 'R$ ' + locale.format_string('%.2f', filtered['vlr_Comissao'].sum(), grouping=True)
+                cardValorComissao = 'R$ ' + format('%.2f', filtered['vlr_Comissao'].sum(), grouping=True)
                 st.metric(label='Valor Comissão', value=cardValorComissao)
             with c2:
-                cardValorImpostos = 'R$ ' + locale.format_string('%.2f', 0,
+                cardValorImpostos = 'R$ ' + format('%.2f', 0,
                                                                  grouping=True)  # filtered['vlr_Comissao'].sum()
                 st.metric(label='Valor Impostos', value=cardValorImpostos)
             with c3:
@@ -427,13 +427,13 @@ def dashboard():
                 cardPercentualaMargem = '{:.2%}'.format(cardPercentualaMargem * 100)
                 st.metric(label='% Margem', value=cardPercentualaMargem)
             with c4:
-                cardValorFrete = 'R$ ' + locale.format_string('%.2f', filtered['vlr_FreteFinal'].sum(), grouping=True)
+                cardValorFrete = 'R$ ' + format('%.2f', filtered['vlr_FreteFinal'].sum(), grouping=True)
                 st.metric(label='Valor Frete', value=cardValorFrete)
             with c5:
                 cardQuantidadeDevolucao = '{:,}'.format(filtered['id_Mediacao'].nunique())
                 st.metric(label='Qtd Devolução', value=cardQuantidadeDevolucao)
             with c6:
-                carValorDevolucao = 'R$ ' + locale.format_string('%.2f', filtered['vlr_Devolucao'].sum(), grouping=True)
+                carValorDevolucao = 'R$ ' + format('%.2f', filtered['vlr_Devolucao'].sum(), grouping=True)
                 st.metric(label='Valor Devolução', value=carValorDevolucao)
 
             with st.container():

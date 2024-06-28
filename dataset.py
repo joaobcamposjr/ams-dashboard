@@ -3,7 +3,7 @@ import pyodbc
 from datetime import datetime
 
 sqlOptions = (
-            'DRIVER={ODBC Driver 18 for SQL Server};'
+            'DRIVER={ODBC Driver 17 for SQL Server};'
             'SERVER=75.101.154.23;'
             'DATABASE=amz_ams;'
             'UID=sa;'

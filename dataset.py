@@ -36,9 +36,9 @@ query = '''
         ,flg_Fulfilled
         ,id_Mediacao
         ,num_NotaFiscal
-        ,cod_SKU
-        ,nom_Item
-        ,nom_Marca
+        ,f.cod_SKU
+        ,f.nom_Item
+        ,f.nom_Marca
         ,vlr_ValorEnvio
         ,nom_TipoEnvio
         ,vlr_CustoEnvio
@@ -48,7 +48,7 @@ query = '''
         ,nom_StatusEnvio
         ,dat_PrevisaoEnvio
         ,vlr_Comissao
-        ,qtd_Quantidade
+        ,f.qtd_Quantidade
         ,DATEDIFF(day, GETDATE(), dat_PrevisaoEnvio) num_DiasAtraso
         ,CASE
         WHEN f.vlr_TotalPago > 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_CustoEnvio
@@ -65,15 +65,19 @@ query = '''
         WHEN f.nom_StatusEnvio = 'cancelled' THEN 'C'
         ELSE 'V'
         END AS flg_Devolucao
-        ,vlr_TotalPago - ( (vlr_Comissao + 0 + 0) - vlr_CustoEnvio) AS vlr_Liquido
+        ,vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - vlr_CustoEnvio) AS vlr_Liquido
         ,CASE
         WHEN t.SUM_vlr_Valor = 0 THEN 0.12
-        ELSE ((vlr_TotalPago - ( (vlr_Comissao + 0 + 0) - vlr_CustoEnvio))/ t.SUM_vlr_Valor) * 100
+        ELSE ((vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - vlr_CustoEnvio))/ t.SUM_vlr_Valor) * 100
         END AS perc_MargemVenda
     FROM
         fato_Venda f
+    LEFT JOIN 
+        fato_Estoque e
+    ON f.cod_SKU = e.cod_SKU
+    AND e.nom_Marca = 'Fiat'
     CROSS JOIN
-        Totais t;
+        Totais t
     '''
 
 df = pd.read_sql(query, sqlConn)

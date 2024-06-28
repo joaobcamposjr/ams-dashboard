@@ -1,0 +1,22 @@
+credentials:
+  usernames:
+    admin:
+      email: admin@amsparts.com.br
+      logged_in: False
+      name: Administrator
+      password: admin
+    murilo:
+      email: murilo@amsparts.com.br
+      logged_in: False
+      name: Murilo Cardoso
+      password: cardoso@321
+    alexandre:
+      email: alexandre@amsparts.com.br
+      logged_in: False
+      name: Alexandre Crisostomo
+      password: crisostomo@321
+
+cookie:
+  expiry_days: 1
+  key: get_key
+  name: name_key

@@ -48,7 +48,8 @@ def dashboard():
         # Cards
         col_Card1, col_Card2, col_Card3 = st.columns(3)
         with st.container():
-            valorPedido = f'R$ {filtered['vlr_TotalPago'].iloc[0].sum():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+            varPedido = filtered['vlr_TotalPago'].iloc[0].sum()
+            valorPedido = f'R$ {varPedido:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
             valorPedidoDia = f'R$ {filtered[filtered['dat_Criacao'] == filtered['dat_Criacao'].max()]['vlr_TotalPago'].sum():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
             valorTicketMedio = f'R$ {filtered[filtered['dat_Criacao'] > filtered['dat_Criacao'].max() - pd.Timedelta(days=30)]['vlr_TotalPago'].mean():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
 
@@ -459,6 +460,6 @@ def dashboard():
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-if __name__ == '__main__':
-    dashboard()
+#if __name__ == '__main__':
+#    dashboard()
 

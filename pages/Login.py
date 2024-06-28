@@ -11,10 +11,6 @@ from streamlit_javascript import st_javascript
 
 st.set_page_config(page_title='Login', layout="centered", initial_sidebar_state="collapsed", menu_items=None)
 
-
-metricaAtraso = ((dfMetrica['num_NotaAtrasoEnvio'].iloc[0] * 100) - 100) * -1
-
-
 with open('config.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
 authenticator = stauth.Authenticate(

@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from dataset import df, dfMetrica, dfMetricaTempoResp, dfVisita, dfPosVenda, dfPergunta, dfTop10
-from utils import locale
+#from utils import locale
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit.components.v1 as components

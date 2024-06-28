@@ -88,8 +88,16 @@ def kpi_icon(current_value):
         return f"🟢 {current_value:.2%}"
     elif 0.08 <= current_value < 0.12:
         return f"🟡 {current_value:.2%}"
+    elif current_value == -999:
+        current_value = 0
+        return f"🟠 {current_value:.2%}"
     else:
         return f"🔴 {current_value:.2%}"
+
+dfDetalhado = df
+
+dfDetalhado['%'] = dfDetalhado['perc_MargemVenda'].apply(kpi_icon)
+
 
 dfTop10 = pd.DataFrame(df,
                        columns=['dat_Criacao', 'id_PedidoFinal', 'vlr_TotalPago', 'vlr_FreteFinal', 'vlr_Liquido',

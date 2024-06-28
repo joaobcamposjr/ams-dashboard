@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from dataset import df, dfMetrica, dfMetricaTempoResp, dfVisita, dfPosVenda, dfPergunta, dfTop10
+from dataset import dfDetalhado, dfMetrica, dfMetricaTempoResp, dfVisita, dfPosVenda, dfPergunta, dfTop10
 #from utils import locale
 import plotly.express as px
 import plotly.graph_objects as go
@@ -34,7 +34,7 @@ def dashboard():
 #
     #filtered = df.query(query)
 
-    filtered = df
+    filtered = dfDetalhado
     with aba1:
         st_autorefresh(interval=600000, limit=None, key="fizzbuzzcounter")
         st.markdown('''

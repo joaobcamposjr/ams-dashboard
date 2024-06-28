@@ -3,5 +3,5 @@ base="light"
 primaryColor="#ff0134"
 textColor="#262730"
 
-[server]
-port="8502"
+##[server]
+##port="8502"

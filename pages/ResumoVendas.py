@@ -48,10 +48,9 @@ def dashboard():
         # Cards
         col_Card1, col_Card2, col_Card3 = st.columns(3)
         with st.container():
-            varPedido = filtered['vlr_TotalPago'].iloc[0].sum()
-            valorPedido = f'R$ {varPedido:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
-            valorPedidoDia = f'R$ {filtered[filtered['dat_Criacao'] == filtered['dat_Criacao'].max()]['vlr_TotalPago'].sum():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
-            valorTicketMedio = f'R$ {filtered[filtered['dat_Criacao'] > filtered['dat_Criacao'].max() - pd.Timedelta(days=30)]['vlr_TotalPago'].mean():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+            valorPedido = f"R$ {filtered['vlr_TotalPago'].iloc[0].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+            valorPedidoDia = f"R$ {filtered[filtered['dat_Criacao'] == filtered['dat_Criacao'].max()]['vlr_TotalPago'].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+            valorTicketMedio = f"R$ {filtered[filtered['dat_Criacao'] > filtered['dat_Criacao'].max() - pd.Timedelta(days=30)]['vlr_TotalPago'].mean():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
 
             #
             col_Card1.metric(label='Valor Pedidos', value=valorPedido)
@@ -414,23 +413,23 @@ def dashboard():
         with st.container():
             c1, c2, c3, c4, c5, c6 = st.columns(6)
             with c1:
-                cardValorComissao = f'R$ {filtered['vlr_Comissao'].sum():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+                cardValorComissao = f"R$ {filtered['vlr_Comissao'].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
                 st.metric(label='Valor Comissão', value=cardValorComissao)
             with c2:
-                cardValorImpostos = f'R$ {0:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')  # filtered['vlr_Comissao'].sum()
+                cardValorImpostos = f"R$ {0:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')  # filtered['vlr_Comissao'].sum()
                 st.metric(label='Valor Impostos', value=cardValorImpostos)
             with c3:
                 cardPercentualaMargem = filtered['perc_MargemVenda'].mean()
                 cardPercentualaMargem = '{:.2%}'.format(cardPercentualaMargem * 100)
                 st.metric(label='% Margem', value=cardPercentualaMargem)
             with c4:
-                cardValorFrete = f'R$ {filtered['vlr_FreteFinal'].sum():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+                cardValorFrete = f"R$ {filtered['vlr_FreteFinal'].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
                 st.metric(label='Valor Frete', value=cardValorFrete)
             with c5:
                 cardQuantidadeDevolucao = '{:,}'.format(filtered['id_Mediacao'].nunique())
                 st.metric(label='Qtd Devolução', value=cardQuantidadeDevolucao)
             with c6:
-                carValorDevolucao = f'R$ {filtered['vlr_Devolucao'].sum():,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+                carValorDevolucao = f"R$ {filtered['vlr_Devolucao'].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
                 st.metric(label='Valor Devolução', value=carValorDevolucao)
 
             with st.container():
@@ -451,7 +450,7 @@ def dashboard():
                         cardPosVenda = 0
                     st.metric(label='Msg Pós Vendas', value=cardPosVenda)
                 with c4:
-                    cardAguardandoResp = f'{dfPergunta[dfPergunta['nom_Status'] == 'UNANSWERED']['id_Vendedor'].count():,}'.replace(',', '.')
+                    cardAguardandoResp = f"{dfPergunta[dfPergunta['nom_Status'] == 'UNANSWERED']['id_Vendedor'].count():,}".replace(',', '.')
                     st.metric(label='Aguardando Resp.', value=cardAguardandoResp)
 
     with aba2:

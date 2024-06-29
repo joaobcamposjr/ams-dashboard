@@ -459,8 +459,8 @@ def dashboard():
             @preco[0] <= Preço <= @preco[1] and \
             @data_compra[0] <= `Data da Compra` <= @data_compra[1]
         '''
-        filtro_dados = df.query(query)
-        filtro_dados = filtro_dados[colunas]
+        #filtro_dados = df.query(query)
+        #filtro_dados = filtro_dados[colunas]
 
 
         st.dataframe(filtered)

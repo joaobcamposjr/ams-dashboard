@@ -74,16 +74,12 @@ query = '''
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' AND f.vlr_CustoEnvio = 0 THEN f.vlr_ValorEnvio
         ELSE -f.vlr_CustoEnvio
         END) AS vlr_Liquido
-        ,ISNULL(CASE
-        WHEN t.SUM_vlr_Valor = 0 THEN 0.12
-        ELSE ((vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - 
-        CASE
+        ,ISNULL((vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - CASE
         WHEN f.vlr_TotalPago > 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_CustoEnvio
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_ValorEnvio
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' AND f.vlr_CustoEnvio = 0 THEN f.vlr_ValorEnvio
         ELSE -f.vlr_CustoEnvio
-        END))/ t.SUM_vlr_Valor)
-        END,-999) AS perc_MargemVenda
+        END)) / vlr_TotalPago, 0) AS perc_MargemVenda
     FROM
         fato_Venda f
     LEFT JOIN 

@@ -113,7 +113,7 @@ dfDetalhado = df
 
 dfDetalhado['%'] = dfDetalhado['perc_MargemVenda'].apply(kpi_icon)
 
-dfDetalhado = dfDetalhado[['dat_Criacao','id_PedidoFinal','num_NotaFiscal','cod_TipoVenda','vlr_Comissao','vlr_FreteFinal','vlr_Impostos','vlr_Liquido','%','nom_Item','vlr_TotalPago']].rename(
+dfDetalhado = dfDetalhado[['dat_Criacao','id_PedidoFinal','num_NotaFiscal','cod_TipoVenda','vlr_TotalPago','vlr_Comissao','vlr_FreteFinal','vlr_Impostos','vlr_Liquido','%','nom_Item']].rename(
     columns={'dat_Criacao':'Data'
         ,'id_PedidoFinal': 'Pedido'
         ,'vlr_TotalPago': 'Venda'

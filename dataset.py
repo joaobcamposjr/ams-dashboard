@@ -76,7 +76,8 @@ query = '''
         END) AS vlr_Liquido
         ,ISNULL(CASE
         WHEN t.SUM_vlr_Valor = 0 THEN 0.12
-        ELSE ((vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - CASE
+        ELSE ((vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - 
+        CASE
         WHEN f.vlr_TotalPago > 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_CustoEnvio
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_ValorEnvio
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' AND f.vlr_CustoEnvio = 0 THEN f.vlr_ValorEnvio
@@ -112,7 +113,7 @@ dfDetalhado = df
 
 dfDetalhado['%'] = dfDetalhado['perc_MargemVenda'].apply(kpi_icon)
 
-dfDetalhado = dfDetalhado[['dat_Criacao','id_PedidoFinal','num_NotaFiscal','cod_TipoVenda','vlr_Comissao','vlr_FreteFinal','vlr_Impostos','vlr_Liquido','%','nom_Item']].rename(
+dfDetalhado = dfDetalhado[['dat_Criacao','id_PedidoFinal','num_NotaFiscal','cod_TipoVenda','vlr_Comissao','vlr_FreteFinal','vlr_Impostos','vlr_Liquido','%','nom_Item','vlr_TotalPago']].rename(
     columns={'dat_Criacao':'Data'
         ,'id_PedidoFinal': 'Pedido'
         ,'vlr_TotalPago': 'Venda'

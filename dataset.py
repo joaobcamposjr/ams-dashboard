@@ -65,11 +65,21 @@ query = '''
         WHEN f.nom_StatusEnvio = 'cancelled' THEN 'C'
         ELSE 'V'
         END AS flg_Devolucao
-        ,vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - vlr_CustoEnvio) AS vlr_Liquido
-        ,CASE
+        ,vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - CASE
+        WHEN f.vlr_TotalPago > 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_CustoEnvio
+        WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_ValorEnvio
+        WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' AND f.vlr_CustoEnvio = 0 THEN f.vlr_ValorEnvio
+        ELSE -f.vlr_CustoEnvio
+        END) AS vlr_Liquido
+        ,ISNULL(CASE
         WHEN t.SUM_vlr_Valor = 0 THEN 0.12
-        ELSE ((vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - vlr_CustoEnvio))/ t.SUM_vlr_Valor) * 100
-        END AS perc_MargemVenda
+        ELSE ((vlr_TotalPago - ( (vlr_Comissao + e.vlr_CustoAMS + (vlr_TotalPago * 0.07)) - CASE
+        WHEN f.vlr_TotalPago > 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_CustoEnvio
+        WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_ValorEnvio
+        WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' AND f.vlr_CustoEnvio = 0 THEN f.vlr_ValorEnvio
+        ELSE -f.vlr_CustoEnvio
+        END))/ t.SUM_vlr_Valor)
+        END,-999) AS perc_MargemVenda
     FROM
         fato_Venda f
     LEFT JOIN 
@@ -78,6 +88,7 @@ query = '''
     AND e.nom_Marca = 'Fiat'
     CROSS JOIN
         Totais t
+
     '''
 
 df = pd.read_sql(query, sqlConn)

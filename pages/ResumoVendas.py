@@ -463,7 +463,7 @@ def dashboard():
         #filtro_dados = filtro_dados[colunas]
 
 
-        st.dataframe(filtered)
+        st.dataframe(dfDetalhado)
 
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)

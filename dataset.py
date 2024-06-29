@@ -79,7 +79,7 @@ query = '''
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_ValorEnvio
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' AND f.vlr_CustoEnvio = 0 THEN f.vlr_ValorEnvio
         ELSE -f.vlr_CustoEnvio
-        END)) / vlr_TotalPago, 0) AS perc_MargemVenda
+        END)) / vlr_TotalPago, -999) AS perc_MargemVenda
     FROM
         fato_Venda f
     LEFT JOIN 

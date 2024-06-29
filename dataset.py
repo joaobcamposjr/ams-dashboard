@@ -35,6 +35,9 @@ query = '''
         ,vlr_TotalPago
         ,flg_Fulfilled
         ,id_Mediacao
+        ,CASE WHEN id_Mediacao IS NULL 'V' ELSE 'D' AS cod_TipoVenda
+        ,CASE WHEN id_Mediacao IS NULL 'Venda' ELSE 'Devolução' AS nom_TipoVenda
+        ,vlr_TotalPago * 0.07 vlr_Impostos
         ,num_NotaFiscal
         ,f.cod_SKU
         ,f.nom_Item
@@ -108,6 +111,19 @@ def kpi_icon(current_value):
 dfDetalhado = df
 
 dfDetalhado['%'] = dfDetalhado['perc_MargemVenda'].apply(kpi_icon)
+
+dfDetalhado = dfDetalhado['dat_Criacao','id_PedidoFinal','num_NotaFiscal','cod_TipoVenda','vlr_Comissao','vlr_FreteFinal','vlr_Impostos','vlr_Liquido','%','nom_Item'].rename(
+    columns={'dat_Criacao':'Data'
+        ,'id_PedidoFinal': 'Pedido'
+        ,'vlr_TotalPago': 'Venda'
+        ,'num_NotaFiscal': 'Nota Fiscal'
+        ,'cod_TipoVenda': 'Tipo Venda'
+        ,'vlr_Comissao': 'Comissão'
+        ,'vlr_FreteFinal': 'Frete'
+        ,'vlr_Impostos': 'Impostos'
+        ,'vlr_Liquido':'Líq. ML'
+        ,'nom_Item': 'Descrição Item'
+     })
 
 
 dfTop10 = pd.DataFrame(df,

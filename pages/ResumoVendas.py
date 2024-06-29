@@ -454,6 +454,15 @@ def dashboard():
                     st.metric(label='Aguardando Resp.', value=cardAguardandoResp)
 
     with aba2:
+        query = '''
+            `Categoria do Produto` in @categorias and \
+            @preco[0] <= Preço <= @preco[1] and \
+            @data_compra[0] <= `Data da Compra` <= @data_compra[1]
+        '''
+        filtro_dados = df.query(query)
+        filtro_dados = filtro_dados[colunas]
+
+
         st.dataframe(filtered)
 
     with open('style.css') as f:

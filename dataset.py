@@ -35,8 +35,8 @@ query = '''
         ,vlr_TotalPago
         ,flg_Fulfilled
         ,id_Mediacao
-        ,CASE WHEN id_Mediacao IS NULL 'V' ELSE 'D' AS cod_TipoVenda
-        ,CASE WHEN id_Mediacao IS NULL 'Venda' ELSE 'Devolução' AS nom_TipoVenda
+        ,CASE WHEN id_Mediacao IS NULL THEN 'V' ELSE 'D' END AS cod_TipoVenda
+        ,CASE WHEN id_Mediacao IS NULL THEN 'Venda' ELSE 'Devolução' END AS nom_TipoVenda
         ,vlr_TotalPago * 0.07 vlr_Impostos
         ,num_NotaFiscal
         ,f.cod_SKU

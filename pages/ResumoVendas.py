@@ -494,7 +494,7 @@ def dashboard():
 
         with filtro3:
             with st.expander('Tipo Venda'):
-                tipovenda = st.popover("Show filter").multiselect(
+                tipovenda = st.multiselect(
                     'Selecione o Tipo de Venda'
                     ,dfDetalhado['Tipo Venda'].unique()
                     ,dfDetalhado['Tipo Venda'].unique()

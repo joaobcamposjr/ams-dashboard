@@ -508,11 +508,32 @@ def dashboard():
 
         filtro_dados = dfDetalhado.query(query)
 
-        st.dataframe(filtro_dados)
+        st.dataframe(filtro_dados, hide_index=True)
+
+        card1, card2, card3, card4, card5, card6 = st.columns(6)
+        with card1:
+            v_TotalPedido = '{:,}'.format(filtro_dados['Pedido'].nunique())
+            st.metric(label='Total Pedidos', value=v_TotalPedido.replace(',', '.'))
+        with card2:
+            v_ValorPedido = f"R$ {filtro_dados['Venda'].sum():,.2f}"
+            st.metric(label='Valor Pedidos', value=v_ValorPedido.replace(',', 'X').replace('.', ',').replace('X', '.'))
+        with card3:
+            v_TicketMedio = f"R$ {filtro_dados['Venda'].mean():,.2f}"
+            st.metric(label='Tiket Médio', value=v_TicketMedio.replace(',', 'X').replace('.', ',').replace('X', '.'))
+        with card4:
+            v_ComissaoML = f"R$ {filtro_dados['Comissão'].sum():,.2f}"
+            st.metric(label='Comissão ML', value=v_ComissaoML.replace(',', 'X').replace('.', ',').replace('X', '.'))
+        with card5:
+            v_Impostos= f"R$ {filtro_dados['Impostos'].sum():,.2f}"
+            st.metric(label='Valor Impostos', value=v_Impostos.replace(',', 'X').replace('.', ',').replace('X', '.'))
+        with card6:
+            v_Frete = f"R$ {filtro_dados['Frete'].sum():,.2f}"
+            st.metric(label='Valor Frete', value=v_Frete.replace(',', 'X').replace('.', ',').replace('X', '.'))
+
 
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-if __name__ == '__main__':
-    dashboard()
+#if __name__ == '__main__':
+#    dashboard()
 

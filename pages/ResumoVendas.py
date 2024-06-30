@@ -490,7 +490,7 @@ def dashboard():
                 def _select_all():
                     st.session_state.selected_all = all_options
 
-                st.button("Todos", on_click=_select_all)
+                st.button("Todos Pedidos", on_click=_select_all)
 
                 selected_all
 
@@ -557,7 +557,7 @@ def dashboard():
                 def _select_all_sku():
                     st.session_state.sku_selected_all = all_options_sku
 
-                st.button("Todos", on_click=_select_all_sku)
+                st.button("Todos SKUs", on_click=_select_all_sku)
 
                 sku_selected_all
 

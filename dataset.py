@@ -3,7 +3,7 @@ import pyodbc
 from datetime import datetime
 
 sqlOptions = (
-            'DRIVER={ODBC Driver 17 for SQL Server};'
+            'DRIVER={ODBC Driver 18 for SQL Server};'
             'SERVER=75.101.154.23;'
             'DATABASE=amz_ams;'
             'UID=sa;'
@@ -52,7 +52,9 @@ query = '''
         ,dat_PrevisaoEnvio
         ,vlr_Comissao
         ,f.qtd_Quantidade
-        ,DATEDIFF(day, GETDATE(), dat_PrevisaoEnvio) num_DiasAtraso
+        ,e.vlr_CustoAMS
+        ,CASE WHEN nom_StatusEnvio NOT IN ('NOT_DELIVERED', 'DELIVERED', 'SHIPPED', 'CANCELLED') 
+            THEN DATEDIFF(day, GETDATE(), dat_PrevisaoEnvio) ELSE 0 END num_DiasAtraso
         ,CASE
         WHEN f.vlr_TotalPago > 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_CustoEnvio
         WHEN f.vlr_TotalPago <= 79.90 AND f.nom_TipoEnvio = 'self_service' THEN f.vlr_ValorEnvio
@@ -109,16 +111,19 @@ dfDetalhado = df
 
 dfDetalhado['%'] = dfDetalhado['perc_MargemVenda'].apply(kpi_icon)
 
-dfDetalhado = dfDetalhado[['dat_Criacao','id_PedidoFinal','num_NotaFiscal','cod_TipoVenda','vlr_TotalPago','vlr_Comissao','vlr_FreteFinal','vlr_Impostos','vlr_Liquido','%','nom_Item']].rename(
-    columns={'dat_Criacao':'Data'
+
+
+dfDetalhado = dfDetalhado[['dat_Criacao','id_PedidoFinal','num_NotaFiscal','nom_TipoVenda','vlr_TotalPago','vlr_Comissao','vlr_FreteFinal','vlr_Impostos','vlr_CustoAMS','vlr_Liquido','%','nom_Item']].rename(
+    columns={'dat_Criacao': 'Data'
         ,'id_PedidoFinal': 'Pedido'
         ,'vlr_TotalPago': 'Venda'
         ,'num_NotaFiscal': 'Nota Fiscal'
-        ,'cod_TipoVenda': 'Tipo Venda'
+        ,'nom_TipoVenda': 'Tipo Venda'
         ,'vlr_Comissao': 'Comissão'
         ,'vlr_FreteFinal': 'Frete'
         ,'vlr_Impostos': 'Impostos'
-        ,'vlr_Liquido':'Líq. ML'
+        ,'vlr_CustoAMS': 'Custo'
+        ,'vlr_Liquido': 'Líq. ML'
         ,'nom_Item': 'Descrição Item'
      })
 
@@ -129,7 +134,7 @@ dfTop10 = pd.DataFrame(df,
 
 for col in dfTop10.columns:
     if col.startswith('vlr_'):
-        dfTop10[col] = dfTop10[col].apply(lambda x: f"{x:,.2f}")
+        dfTop10[col] = dfTop10[col].apply(lambda x: f"{x:.2f}")
 
 dfTop10 = dfTop10.sort_values(by='dat_Criacao', ascending=False).head(10).rename(
     columns={'dat_Criacao':'Data'

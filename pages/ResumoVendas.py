@@ -12,6 +12,9 @@ from yaml import SafeLoader
 import streamlit_authenticator as stauth
 import toml
 
+
+
+
 def dashboard():
     # st.title('Página Inicial')
     #if st.session_state["authentication_status"]:
@@ -416,7 +419,7 @@ def dashboard():
                 cardValorComissao = f"R$ {filtered['vlr_Comissao'].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
                 st.metric(label='Valor Comissão', value=cardValorComissao)
             with c2:
-                cardValorImpostos = f"R$ {0:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')  # filtered['vlr_Comissao'].sum()
+                cardValorImpostos = f"R$ {filtered['vlr_Impostos'].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')  # filtered['vlr_Comissao'].sum()
                 st.metric(label='Valor Impostos', value=cardValorImpostos)
             with c3:
                 cardPercentualaMargem = filtered['perc_MargemVenda'].mean()
@@ -427,7 +430,7 @@ def dashboard():
                 st.metric(label='Valor Frete', value=cardValorFrete)
             with c5:
                 cardQuantidadeDevolucao = '{:,}'.format(filtered['id_Mediacao'].nunique())
-                st.metric(label='Qtd Devolução', value=cardQuantidadeDevolucao)
+                st.metric(label='Qtd Devolução', value=cardQuantidadeDevolucao.replace(',','.'))
             with c6:
                 carValorDevolucao = f"R$ {filtered['vlr_Devolucao'].sum():,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
                 st.metric(label='Valor Devolução', value=carValorDevolucao)
@@ -436,7 +439,7 @@ def dashboard():
                 c1, c2, c3, c4 = st.columns(4)
                 with c1:
                     cardTotalVisita = '{:,}'.format(dfVisita['num_TotalVisita'].sum())
-                    st.metric(label='Total Visitas', value=cardTotalVisita)
+                    st.metric(label='Total Visitas', value=cardTotalVisita.replace(',','.'))
                 with c2:
                     cardConversaoVenda = '{:.2%}'.format(
                         filtered['id_Pedido'].count() / dfVisita['num_TotalVisita'].sum())
@@ -448,26 +451,68 @@ def dashboard():
                         cardPosVenda = '{:,}'.format(dfPosVenda['qtd_MSG'].sum())
                     except:
                         cardPosVenda = 0
-                    st.metric(label='Msg Pós Vendas', value=cardPosVenda)
+                    st.metric(label='Msg Pós Vendas', value=cardPosVenda.replace(',','.'))
                 with c4:
                     cardAguardandoResp = f"{dfPergunta[dfPergunta['nom_Status'] == 'UNANSWERED']['id_Vendedor'].count():,}".replace(',', '.')
                     st.metric(label='Aguardando Resp.', value=cardAguardandoResp)
 
     with aba2:
+        filtro1,filtro2,filtro3 = st.columns(3)
+        with filtro1:
+            with st.expander('Data de Venda'):
+                data_venda = st.date_input(
+                    'Selecione a Data'
+                    ,(dfDetalhado['Data'].min()
+                    ,dfDetalhado['Data'].max())
+                )
+
+        with filtro2:
+            with st.expander('Pedido'):
+               #pedido = st.container(height=300).multiselect(
+               #    'Selecione o Número do Pedido'
+               #    ,dfDetalhado['Pedido'].unique()
+               #    ,dfDetalhado['Pedido'].unique()
+               #)
+
+                all_options = dfDetalhado['Pedido'].tolist()
+
+                selected_all = st.container(height=200).multiselect(
+                    'Selecione o Pedido'
+                    ,all_options
+                    ,all_options
+                    ,key="selected_all"
+                    ,placeholder='Selecione o Pedido'
+                )
+
+                def _select_all():
+                    st.session_state.selected_all = all_options
+
+                st.button("Todos", on_click=_select_all)
+
+                selected_all
+
+
+        with filtro3:
+            with st.expander('Tipo Venda'):
+                tipovenda = st.popover("Show filter").multiselect(
+                    'Selecione o Tipo de Venda'
+                    ,dfDetalhado['Tipo Venda'].unique()
+                    ,dfDetalhado['Tipo Venda'].unique()
+                )
+
         query = '''
-            `Categoria do Produto` in @categorias and \
-            @preco[0] <= Preço <= @preco[1] and \
-            @data_compra[0] <= `Data da Compra` <= @data_compra[1]
+            `Data` >= @data_venda[0] and `Data` <= @data_venda[1] \
+            and `Pedido` in @selected_all \
+            and `Tipo Venda` in @tipovenda \
         '''
-        #filtro_dados = df.query(query)
-        #filtro_dados = filtro_dados[colunas]
 
+        filtro_dados = dfDetalhado.query(query)
 
-        st.dataframe(dfDetalhado)
+        st.dataframe(filtro_dados)
 
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-#if __name__ == '__main__':
-#    dashboard()
+if __name__ == '__main__':
+    dashboard()
 

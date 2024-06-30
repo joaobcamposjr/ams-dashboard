@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from dataset import df, dfDetalhado, dfMetrica, dfMetricaTempoResp, dfVisita, dfPosVenda, dfPergunta, dfTop10
+from dataset import df, dfDetalhado, dfMetrica, dfMetricaTempoResp, dfVisita, dfPosVenda, dfPergunta, dfTop10, dfEstoque
 #from utils import locale
 import plotly.express as px
 import plotly.graph_objects as go
@@ -25,7 +25,7 @@ def dashboard():
     #        teste = authenticator.logout('Logout', 'main')
     #        if teste:
     #            st.switch_page('pages/Login.py')
-    aba1, aba2 = st.tabs(['Resumo', 'Detalhado'])
+    aba1, aba2, aba3 = st.tabs(['Resumo', 'Detalhado', 'Estoque'])
 
     #marcas = st.multiselect(
     #    'Marcas'
@@ -532,6 +532,54 @@ def dashboard():
         with card6:
             v_Frete = f"R$ {filtro_dados['Frete'].sum():,.2f}"
             st.metric(label='Valor Frete', value=v_Frete.replace(',', 'X').replace('.', ',').replace('X', '.'))
+
+    with aba3:
+        filtro1,filtro2,filtro3,filtro4 = st.columns(4)
+        with filtro1:
+            with st.expander('Status'):
+                status = st.multiselect(
+                    'Selecione o Status'
+                    , dfEstoque['Status'].unique()
+                    , dfEstoque['Status'].unique()
+                )
+        with filtro2:
+            with st.expander('SKU'):
+                all_options_sku = dfEstoque['SKU'].tolist()
+
+                sku_selected_all = st.container(height=200).multiselect(
+                    'Selecione o SKU'
+                    , all_options_sku
+                    , all_options_sku
+                    , key="sku_selected_all"
+                    , placeholder='Selecione o Pedido'
+                )
+
+                def _select_all_sku():
+                    st.session_state.sku_selected_all = all_options_sku
+
+                st.button("Todos", on_click=_select_all_sku)
+
+                sku_selected_all
+
+        with filtro3:
+            with st.expander('Marca'):
+                marca = st.multiselect(
+                    'Selecione a Marca'
+                    , dfEstoque['Marca'].unique()
+                    , dfEstoque['Marca'].unique()
+                )
+        with filtro4:
+            ""
+
+        query = '''
+                    `Status` in @status  \
+                    and `SKU` in @sku_selected_all \
+                    and `Marca` in @marca \
+                '''
+
+        filtro_estoque = dfEstoque.query(query)
+
+        st.dataframe(filtro_estoque, hide_index=True)
 
 
     with open('style.css') as f:

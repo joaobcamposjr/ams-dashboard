@@ -177,3 +177,46 @@ queryPergunta = '''
     '''
 
 dfPergunta = pd.read_sql(queryPergunta, sqlConn)
+
+
+queryEstoque = '''
+    select * from fato_Estoque
+    '''
+
+dfEstoque = pd.read_sql(queryEstoque, sqlConn)
+
+def kpi_iconQTD(current_value):
+    if current_value >= 30:
+        return f"🟢"
+    elif current_value >= 25:
+        return f"🟡"
+    elif current_value >= 20:
+        return f"🟠"
+    else:
+        return f"🔴"
+
+dfEstoque['Status'] = dfEstoque['qtd_Quantidade'].apply(kpi_iconQTD)
+
+dfEstoque = dfEstoque[['Status'
+                    ,'cod_SKU'
+                    ,'nom_Item'
+                    ,'nom_ItemDetalhado'
+                    ,'nom_Marca'
+                    ,'qtd_Quantidade'
+                    ,'vlr_CustoAMS'
+                    ,'vlr_PrecoMLMagaluPremium'
+                    ,'vlr_PrecoMLMagaluClassico'
+                    ,'vlr_PrecoShopee'
+                    ,'vlr_PrecoOlist']].rename(
+    columns={'cod_SKU': 'SKU'
+        , 'nom_Item' : 'Item'
+        , 'nom_ItemDetalhado' : 'Descrição'
+        , 'nom_Marca' : 'Marca'
+        , 'qtd_Quantidade' : 'Quantidade'
+        , 'vlr_CustoAMS' : 'Custo'
+        , 'vlr_PrecoMLMagaluPremium' : 'Preço ML Premium'
+        , 'vlr_PrecoMLMagaluClassico' : 'Preço ML Clássico'
+        , 'vlr_PrecoShopee' : 'Preço Shopee'
+        , 'vlr_PrecoOlist' : 'Preço Olist'
+     })
+

@@ -457,6 +457,9 @@ def dashboard():
                     st.metric(label='Aguardando Resp.', value=cardAguardandoResp)
 
     with aba2:
+        st.markdown('''
+                        ## Detalhado de Vendas Ecommerce
+                        ''')
         filtro1,filtro2,filtro3 = st.columns(3)
         with filtro1:
             with st.expander('Data de Venda'):

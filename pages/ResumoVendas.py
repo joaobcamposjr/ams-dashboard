@@ -580,7 +580,12 @@ def dashboard():
         filtro_estoque = dfEstoque.query(query)
 
         st.dataframe(filtro_estoque, hide_index=True)
-
+        st.markdown(f'''
+        🟢 {filtro_estoque[filtro_estoque['Status'] == '🟢']['Status'].count()} Items \n
+        🟡 {filtro_estoque[filtro_estoque['Status'] == '🟡']['Status'].count()} Items \n
+        🟠 {filtro_estoque[filtro_estoque['Status'] == '🟠']['Status'].count()} Items \n
+        🔴 {filtro_estoque[filtro_estoque['Status'] == '🔴']['Status'].count()} Items \n
+        ''')
 
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
